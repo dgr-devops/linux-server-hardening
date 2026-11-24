@@ -1,0 +1,4 @@
+# Copia este fichero a inventory/hosts.ini y ajusta los hosts.
+# 192.0.2.0/24 es un rango reservado para documentación.
+[servers]
+servidor1 ansible_host=192.0.2.10 ansible_user=admin
