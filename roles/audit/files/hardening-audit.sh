@@ -9,7 +9,7 @@
 #   0 sin FAIL | 1 solo FAIL de severidad media/baja | 2 algún FAIL alto
 #   3 no se pudo auditar (no es root, sistema no soportado) | 64 uso incorrecto
 # Las funciones auxiliares se invocan de forma indirecta mediante rc().
-# shellcheck disable=SC2329
+# shellcheck disable=SC2329,SC2317
 set -u
 
 readonly EX_OK=0 EX_WARNING=1 EX_CRITICAL=2 EX_UNKNOWN=3 EX_USAGE=64
