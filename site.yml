@@ -1,0 +1,50 @@
+---
+- name: Bastionado base de servidores Debian/Ubuntu con auditoría antes/después
+  hosts: servers
+  become: true
+  gather_facts: true
+  pre_tasks:
+    - name: Comprobar que el sistema es Debian o Ubuntu
+      ansible.builtin.assert:
+        that: ansible_facts['os_family'] == 'Debian'
+        fail_msg: "Este playbook solo soporta Debian/Ubuntu (detectado: {{ ansible_facts['os_family'] }})."
+        quiet: true
+      tags: [always]
+  roles:
+    - role: audit
+      vars:
+        audit_label: ANTES
+        audit_key: before
+      tags: [audit, audit_before]
+    - role: filesystem
+      tags: [filesystem]
+    - role: accounts
+      tags: [accounts]
+    - role: ssh
+      tags: [ssh]
+    - role: sysctl
+      tags: [sysctl]
+    - role: updates
+      tags: [updates]
+    - role: auditing
+      tags: [auditing]
+    - role: fail2ban
+      tags: [fail2ban]
+    - role: firewall
+      tags: [firewall]
+    - role: audit
+      vars:
+        audit_label: DESPUÉS
+        audit_key: after
+      tags: [audit, audit_after]
+  post_tasks:
+    - name: Comparar la puntuación antes y después
+      ansible.builtin.debug:
+        msg: >-
+          Puntuación {{ audit_results.before.score }}% -> {{ audit_results.after.score }}%
+          | FAIL {{ audit_results.before.fail }} -> {{ audit_results.after.fail }}
+          | PASS {{ audit_results.before.pass }} -> {{ audit_results.after.pass }}
+      when:
+        - audit_results.before is defined
+        - audit_results.after is defined
+      tags: [audit]

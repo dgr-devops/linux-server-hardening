@@ -1,0 +1,9 @@
+---
+- name: Auditoría de bastionado (solo lectura, sin cambios de configuración)
+  hosts: servers
+  become: true
+  roles:
+    - role: audit
+      vars:
+        audit_label: AUDITORÍA
+        audit_key: audit
