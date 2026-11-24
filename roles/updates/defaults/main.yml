@@ -1,0 +1,5 @@
+---
+updates_autoremove: true
+# Reiniciar automáticamente si una actualización lo exige. Desactivado: el
+# reinicio debe ocurrir en una ventana acordada.
+updates_automatic_reboot: false

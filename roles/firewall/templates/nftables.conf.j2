@@ -1,0 +1,31 @@
+#!/usr/sbin/nft -f
+# {{ ansible_managed }}
+# Tabla propia: no se hace "flush ruleset", así que no se pisan las reglas de
+# otras herramientas (Docker, fail2ban).
+add table inet hardening
+flush table inet hardening
+
+table inet hardening {
+  chain input {
+    type filter hook input priority filter; policy drop;
+
+    ct state established,related accept
+    ct state invalid drop
+    iif "lo" accept
+
+    ip protocol icmp icmp type { echo-request, destination-unreachable, time-exceeded } limit rate 10/second accept
+    ip6 nexthdr icmpv6 icmpv6 type { echo-request, destination-unreachable, packet-too-big, time-exceeded, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+
+    tcp dport {{ firewall_ssh_port }} ct state new accept
+{% if firewall_extra_tcp_ports | length > 0 %}
+    tcp dport { {{ firewall_extra_tcp_ports | join(', ') }} } accept
+{% endif %}
+{% if firewall_extra_udp_ports | length > 0 %}
+    udp dport { {{ firewall_extra_udp_ports | join(', ') }} } accept
+{% endif %}
+  }
+
+  chain forward {
+    type filter hook forward priority filter; policy {{ firewall_forward_policy }};
+  }
+}

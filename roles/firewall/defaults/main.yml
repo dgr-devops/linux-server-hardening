@@ -1,0 +1,10 @@
+---
+firewall_ssh_port: 22
+# Puertos TCP adicionales abiertos en la entrada (p. ej. [80, 443]).
+firewall_extra_tcp_ports: []
+firewall_extra_udp_ports: []
+# Hosts que enrutan o ejecutan Docker/Kubernetes deben poner "accept".
+firewall_forward_policy: drop
+# Cargar las reglas en caliente al cambiar la plantilla. Por defecto sigue a
+# hardening_apply_runtime (true si no está definida).
+firewall_apply_runtime: "{{ hardening_apply_runtime | default(true) }}"

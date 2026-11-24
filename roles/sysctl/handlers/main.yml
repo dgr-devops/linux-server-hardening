@@ -1,0 +1,5 @@
+---
+- name: Aplicar sysctl
+  ansible.builtin.command: sysctl --system
+  changed_when: true
+  when: hardening_apply_runtime | default(true) | bool

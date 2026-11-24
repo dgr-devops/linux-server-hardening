@@ -1,0 +1,23 @@
+---
+- name: Instalar nftables
+  ansible.builtin.apt:
+    name: nftables
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Desplegar el conjunto de reglas de nftables
+  ansible.builtin.template:
+    src: nftables.conf.j2
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: "0644"
+    validate: "{{ firewall_validate_command | default('nft -c -f %s') }}"
+  notify: Recargar nftables
+
+- name: Habilitar nftables al arranque
+  ansible.builtin.service:
+    name: nftables
+    enabled: true
+  when: hardening_manage_services | default(true) | bool

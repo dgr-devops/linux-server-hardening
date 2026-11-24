@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  role_name: sysctl
+  author: Daniel García Rodríguez
+  description: Parámetros de kernel y red endurecidos
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+    - name: Ubuntu
+      versions:
+        - noble
+  galaxy_tags:
+    - hardening
+    - security
+dependencies: []

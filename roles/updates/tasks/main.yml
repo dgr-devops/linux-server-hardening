@@ -1,0 +1,15 @@
+---
+- name: Instalar unattended-upgrades
+  ansible.builtin.apt:
+    name: unattended-upgrades
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Activar la ejecución diaria de actualizaciones de seguridad
+  ansible.builtin.template:
+    src: 21-hardening-auto-upgrades.j2
+    dest: /etc/apt/apt.conf.d/21-hardening-auto-upgrades
+    owner: root
+    group: root
+    mode: "0644"
