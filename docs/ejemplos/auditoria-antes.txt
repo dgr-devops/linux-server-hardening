@@ -1,0 +1,56 @@
+== Auditoría de bastionado - ANTES ==
+sistema: Ubuntu 24.04.5 LTS
+
+[FAIL] SSH-01  (high  ) Login de root por SSH desactivado  -> permitrootlogin=yes (esperado: no)
+[FAIL] SSH-02  (high  ) Autenticación por contraseña desactivada  -> passwordauthentication=yes (esperado: no)
+[PASS] SSH-03  (high  ) Contraseñas vacías prohibidas
+[FAIL] SSH-04  (medium) Reenvío X11 desactivado  -> x11forwarding=yes (esperado: no)
+[FAIL] SSH-05  (medium) MaxAuthTries <= 4  -> maxauthtries=10 (esperado: <= 4)
+[FAIL] SSH-06  (medium) LoginGraceTime <= 60s  -> logingracetime=120 (esperado: <= 60)
+[FAIL] SSH-07  (medium) Sesiones inactivas se cierran (ClientAlive)  -> clientaliveinterval=0 clientalivecountmax=3
+[FAIL] SSH-08  (low   ) Reenvío del agente SSH desactivado  -> allowagentforwarding=yes (esperado: no)
+[PASS] SSH-09  (medium) Autenticación basada en host desactivada
+[PASS] ACC-01  (high  ) Solo root tiene UID 0
+[PASS] ACC-02  (high  ) Ninguna cuenta con contraseña vacía
+[FAIL] ACC-03  (medium) sudo siempre pide contraseña (sin NOPASSWD)  -> NOPASSWD en: /etc/sudoers.d/90-sysop
+[PASS] ACC-04  (low   ) sudo usa pty (use_pty)
+[FAIL] ACC-05  (low   ) sudo registra en fichero propio (logfile)  -> Defaults logfile en sudoers
+[FAIL] ACC-06  (medium) PASS_MAX_DAYS <= 365 en login.defs  -> PASS_MAX_DAYS=99999
+[FAIL] ACC-07  (medium) UMASK por defecto 027 o más estricta  -> UMASK=022
+[FAIL] ACC-08  (medium) su restringido al grupo sudo (pam_wheel)  -> pam_wheel en /etc/pam.d/su
+[FAIL] SYS-01  (high  ) sysctl net.ipv4.tcp_syncookies = 1  -> configurado=sin definir (esperado: 1)
+[FAIL] SYS-02  (medium) sysctl net.ipv4.conf.all.rp_filter = 1  -> configurado=2 (esperado: 1)
+[FAIL] SYS-03  (medium) sysctl net.ipv4.conf.all.accept_redirects = 0  -> configurado=1 (esperado: 0)
+[FAIL] SYS-04  (medium) sysctl net.ipv4.conf.all.send_redirects = 0  -> configurado=sin definir (esperado: 0)
+[FAIL] SYS-05  (medium) sysctl net.ipv4.conf.all.accept_source_route = 0  -> configurado=sin definir (esperado: 0)
+[FAIL] SYS-06  (low   ) sysctl net.ipv4.conf.all.log_martians = 1  -> configurado=sin definir (esperado: 1)
+[FAIL] SYS-07  (low   ) sysctl net.ipv4.icmp_echo_ignore_broadcasts = 1  -> configurado=sin definir (esperado: 1)
+[FAIL] SYS-08  (medium) sysctl net.ipv6.conf.all.accept_redirects = 0  -> configurado=sin definir (esperado: 0)
+[FAIL] SYS-09  (medium) sysctl kernel.randomize_va_space = 2  -> configurado=sin definir (esperado: 2)
+[FAIL] SYS-10  (medium) sysctl kernel.kptr_restrict = 2  -> configurado=1 (esperado: 2)
+[FAIL] SYS-11  (low   ) sysctl kernel.dmesg_restrict = 1  -> configurado=sin definir (esperado: 1)
+[PASS] SYS-12  (medium) sysctl fs.protected_hardlinks = 1
+[PASS] SYS-13  (medium) sysctl fs.protected_symlinks = 1
+[FAIL] SYS-14  (medium) sysctl fs.suid_dumpable = 0  -> configurado=sin definir (esperado: 0)
+[FAIL] FW-01   (high  ) Cortafuegos nftables instalado  -> paquete nftables no instalado
+[FAIL] FW-02   (high  ) Política por defecto de entrada: drop  -> sin /etc/nftables.conf gestionado
+[FAIL] FW-03   (medium) SSH permitido explícitamente en el cortafuegos  -> sin /etc/nftables.conf gestionado
+[FAIL] UPD-01  (medium) unattended-upgrades instalado  -> paquete no instalado
+[FAIL] UPD-02  (medium) Actualizaciones automáticas activadas (Unattended-Upgrade 1)  -> paquete no instalado
+[FAIL] UPD-03  (low   ) Lista de paquetes se refresca a diario  -> paquete no instalado
+[FAIL] AUD-01  (medium) auditd instalado  -> paquete no instalado
+[FAIL] AUD-02  (medium) Reglas de auditoría sobre identidad (/etc/passwd, /etc/shadow)  -> paquete no instalado
+[FAIL] AUD-03  (medium) Reglas de auditoría sobre sudoers y SSH  -> paquete no instalado
+[FAIL] F2B-01  (medium) fail2ban instalado  -> paquete no instalado
+[FAIL] F2B-02  (medium) Jail sshd de fail2ban activa  -> paquete no instalado
+[FAIL] FS-01   (high  ) /etc/shadow con modo <= 640  -> modo=664
+[PASS] FS-02   (high  ) /etc/gshadow con modo <= 640
+[PASS] FS-03   (medium) /etc/passwd con modo <= 644
+[FAIL] FS-04   (medium) /etc/ssh/sshd_config con modo <= 600  -> modo=644
+[FAIL] FS-05   (medium) /etc/crontab con modo <= 600  -> modo=644
+[FAIL] FS-06   (high  ) Sin ficheros escribibles por todos en /etc  -> encontrados: /etc/insecure-lab.conf
+[PASS] FS-07   (medium) /tmp con sticky bit
+[FAIL] FS-08   (low   ) Volcados de memoria (core dumps) desactivados en limits  -> * hard core 0
+[FAIL] FS-09   (low   ) Módulos de sistemas de ficheros raros bloqueados (cramfs, udf)  -> install cramfs /bin/true
+
+RESUMEN: 51 comprobaciones | PASS=10 FAIL=41 (altas: 7) SKIP=0 | puntuación: 19%

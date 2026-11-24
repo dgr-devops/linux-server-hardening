@@ -1,0 +1,59 @@
+== Auditoría de bastionado - DESPUÉS ==
+sistema: Ubuntu 24.04.5 LTS
+
+[PASS] SSH-01  (high  ) Login de root por SSH desactivado
+[PASS] SSH-02  (high  ) Autenticación por contraseña desactivada
+[PASS] SSH-03  (high  ) Contraseñas vacías prohibidas
+[PASS] SSH-04  (medium) Reenvío X11 desactivado
+[PASS] SSH-05  (medium) MaxAuthTries <= 4
+[PASS] SSH-06  (medium) LoginGraceTime <= 60s
+[PASS] SSH-07  (medium) Sesiones inactivas se cierran (ClientAlive)
+[PASS] SSH-08  (low   ) Reenvío del agente SSH desactivado
+[PASS] SSH-09  (medium) Autenticación basada en host desactivada
+[PASS] ACC-01  (high  ) Solo root tiene UID 0
+[PASS] ACC-02  (high  ) Ninguna cuenta con contraseña vacía
+[PASS] ACC-03  (medium) sudo siempre pide contraseña (sin NOPASSWD)
+[PASS] ACC-04  (low   ) sudo usa pty (use_pty)
+[PASS] ACC-05  (low   ) sudo registra en fichero propio (logfile)
+[PASS] ACC-06  (medium) PASS_MAX_DAYS <= 365 en login.defs
+[PASS] ACC-07  (medium) UMASK por defecto 027 o más estricta
+[PASS] ACC-08  (medium) su restringido al grupo sudo (pam_wheel)
+[PASS] SYS-01  (high  ) sysctl net.ipv4.tcp_syncookies = 1
+[PASS] SYS-02  (medium) sysctl net.ipv4.conf.all.rp_filter = 1
+[PASS] SYS-03  (medium) sysctl net.ipv4.conf.all.accept_redirects = 0
+[PASS] SYS-04  (medium) sysctl net.ipv4.conf.all.send_redirects = 0
+[PASS] SYS-05  (medium) sysctl net.ipv4.conf.all.accept_source_route = 0
+[PASS] SYS-06  (low   ) sysctl net.ipv4.conf.all.log_martians = 1
+[PASS] SYS-07  (low   ) sysctl net.ipv4.icmp_echo_ignore_broadcasts = 1
+[PASS] SYS-08  (medium) sysctl net.ipv6.conf.all.accept_redirects = 0
+[PASS] SYS-09  (medium) sysctl kernel.randomize_va_space = 2
+[PASS] SYS-10  (medium) sysctl kernel.kptr_restrict = 2
+[PASS] SYS-11  (low   ) sysctl kernel.dmesg_restrict = 1
+[PASS] SYS-12  (medium) sysctl fs.protected_hardlinks = 1
+[PASS] SYS-13  (medium) sysctl fs.protected_symlinks = 1
+[PASS] SYS-14  (medium) sysctl fs.suid_dumpable = 0
+[PASS] FW-01   (high  ) Cortafuegos nftables instalado
+[PASS] FW-02   (high  ) Política por defecto de entrada: drop
+[PASS] FW-03   (medium) SSH permitido explícitamente en el cortafuegos
+[SKIP] FW-04   (medium) nftables.service habilitado al arranque  -> systemd no está en ejecución (contenedor)
+[PASS] UPD-01  (medium) unattended-upgrades instalado
+[PASS] UPD-02  (medium) Actualizaciones automáticas activadas (Unattended-Upgrade 1)
+[PASS] UPD-03  (low   ) Lista de paquetes se refresca a diario
+[PASS] AUD-01  (medium) auditd instalado
+[PASS] AUD-02  (medium) Reglas de auditoría sobre identidad (/etc/passwd, /etc/shadow)
+[PASS] AUD-03  (medium) Reglas de auditoría sobre sudoers y SSH
+[SKIP] AUD-04  (medium) auditd.service activo  -> systemd no está en ejecución (contenedor)
+[PASS] F2B-01  (medium) fail2ban instalado
+[PASS] F2B-02  (medium) Jail sshd de fail2ban activa
+[SKIP] F2B-03  (medium) fail2ban.service activo  -> systemd no está en ejecución (contenedor)
+[PASS] FS-01   (high  ) /etc/shadow con modo <= 640
+[PASS] FS-02   (high  ) /etc/gshadow con modo <= 640
+[PASS] FS-03   (medium) /etc/passwd con modo <= 644
+[PASS] FS-04   (medium) /etc/ssh/sshd_config con modo <= 600
+[PASS] FS-05   (medium) /etc/crontab con modo <= 600
+[PASS] FS-06   (high  ) Sin ficheros escribibles por todos en /etc
+[PASS] FS-07   (medium) /tmp con sticky bit
+[PASS] FS-08   (low   ) Volcados de memoria (core dumps) desactivados en limits
+[PASS] FS-09   (low   ) Módulos de sistemas de ficheros raros bloqueados (cramfs, udf)
+
+RESUMEN: 54 comprobaciones | PASS=51 FAIL=0 (altas: 0) SKIP=3 | puntuación: 100%
