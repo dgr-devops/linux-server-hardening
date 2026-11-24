@@ -1,0 +1,43 @@
+---
+- name: Instalar el script de auditoría
+  ansible.builtin.copy:
+    src: hardening-audit.sh
+    dest: "{{ audit_script_dest }}"
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: Ejecutar la auditoría (texto)
+  ansible.builtin.command: "{{ audit_script_dest }} --label '{{ audit_label }}'"
+  register: audit_text
+  changed_when: false
+  failed_when: audit_text.rc not in [0, 1, 2]
+
+- name: Ejecutar la auditoría (JSON)
+  ansible.builtin.command: "{{ audit_script_dest }} --json --label '{{ audit_label }}'"
+  register: audit_json
+  changed_when: false
+  failed_when: audit_json.rc not in [0, 1, 2]
+
+- name: Guardar los informes en la máquina de control
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: "{{ audit_report_dir }}/{{ inventory_hostname }}-{{ audit_key }}.{{ item.ext }}"
+    mode: "0644"
+  delegate_to: localhost
+  become: false
+  # El informe es una salida, no configuración del servidor: no cuenta como cambio.
+  changed_when: false
+  loop:
+    - {ext: txt, content: "{{ audit_text.stdout }}\n"}
+    - {ext: json, content: "{{ audit_json.stdout }}\n"}
+  loop_control:
+    label: "{{ item.ext }}"
+
+- name: Recordar el resultado para la comparación final
+  ansible.builtin.set_fact:
+    audit_results: "{{ audit_results | default({}) | combine({audit_key: audit_json.stdout | from_json}) }}"
+
+- name: Mostrar el resumen de la auditoría
+  ansible.builtin.debug:
+    msg: "{{ audit_text.stdout_lines | last }}"

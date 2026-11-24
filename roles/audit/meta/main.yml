@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  role_name: audit
+  author: Daniel García Rodríguez
+  description: Informe de auditoría de bastionado (antes/después)
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+    - name: Ubuntu
+      versions:
+        - noble
+  galaxy_tags:
+    - hardening
+    - security
+dependencies: []

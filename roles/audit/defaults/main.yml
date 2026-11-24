@@ -1,0 +1,7 @@
+---
+audit_label: AUDITORÍA
+# Clave del informe (nombre de fichero y de resumen): before, after...
+audit_key: audit
+audit_script_dest: /usr/local/sbin/hardening-audit
+# Los informes se guardan en la máquina que lanza Ansible.
+audit_report_dir: "{{ playbook_dir }}/reports"
