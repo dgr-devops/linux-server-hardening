@@ -1,0 +1,20 @@
+---
+# Inventario del test: un contenedor Docker sin systemd ni privilegios.
+all:
+  children:
+    servers:
+      hosts:
+        lsh-test:
+          ansible_connection: community.docker.docker
+          ansible_python_interpreter: /usr/bin/python3
+          ansible_become: false
+      vars:
+        # Sin systemd ni capacidades de red/kernel: no se tocan servicios ni se aplica en caliente.
+        hardening_manage_services: false
+        hardening_apply_runtime: false
+        # NET_ADMIN en el contenedor: nftables sí se valida y se carga en su propio netns.
+        firewall_apply_runtime: true
+        # El contenedor no tiene claves SSH: solo en pruebas se desactiva la protección anti-bloqueo.
+        ssh_skip_lockout_check: true
+        accounts_nopasswd_files:
+          - /etc/sudoers.d/90-sysop
