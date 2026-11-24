@@ -1,0 +1,6 @@
+---
+- name: Recargar sshd
+  ansible.builtin.service:
+    name: ssh
+    state: reloaded
+  when: hardening_manage_services | default(true) | bool

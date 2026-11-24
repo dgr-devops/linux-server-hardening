@@ -1,0 +1,76 @@
+---
+- name: Instalar el servidor OpenSSH
+  ansible.builtin.apt:
+    name: openssh-server
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Buscar claves públicas autorizadas (protección anti-bloqueo)
+  ansible.builtin.find:
+    paths:
+      - /root
+      - /home
+    patterns: authorized_keys
+    recurse: true
+    depth: 3
+    size: 1
+    hidden: true
+  register: ssh_authorized_keys
+  when:
+    - ssh_password_authentication == "no"
+    - not (ssh_skip_lockout_check | bool)
+
+- name: Abortar si desactivar la contraseña dejaría el servidor sin acceso
+  ansible.builtin.assert:
+    that: ssh_authorized_keys.matched > 0
+    fail_msg: >-
+      No hay ningún authorized_keys con contenido. Desactivar PasswordAuthentication
+      dejaría el servidor inaccesible. Instala una clave pública o define
+      ssh_skip_lockout_check=true si sabes lo que haces.
+    quiet: true
+  when:
+    - ssh_password_authentication == "no"
+    - not (ssh_skip_lockout_check | bool)
+
+- name: Crear el directorio de privilegios separados de sshd
+  ansible.builtin.file:
+    path: /run/sshd
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Asegurar que sshd_config incluye sshd_config.d
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    insertbefore: BOF
+    line: Include /etc/ssh/sshd_config.d/*.conf
+    regexp: ^Include\s+/etc/ssh/sshd_config\.d/\*\.conf
+    mode: "0600"
+    validate: /usr/sbin/sshd -t -f %s
+
+- name: Crear el directorio de configuración adicional de sshd
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config.d
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Desplegar la configuración endurecida de sshd
+  ansible.builtin.template:
+    src: 10-hardening.conf.j2
+    dest: /etc/ssh/sshd_config.d/10-hardening.conf
+    owner: root
+    group: root
+    mode: "0600"
+    validate: /usr/sbin/sshd -t -f %s
+  notify: Recargar sshd
+
+- name: Restringir permisos de sshd_config
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: "0600"

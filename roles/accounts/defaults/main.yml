@@ -1,0 +1,12 @@
+---
+accounts_pass_max_days: 90
+accounts_pass_min_days: 1
+accounts_pass_warn_age: 7
+accounts_umask: "027"
+accounts_su_group: sudo
+accounts_sudo_logfile: /var/log/sudo.log
+accounts_sudo_timestamp_timeout: 5
+# Ficheros de sudoers a los que quitar NOPASSWD. Vacío por defecto: en nubes
+# públicas el usuario por defecto depende de NOPASSWD y quitarlo sin un plan
+# deja al administrador sin acceso root.
+accounts_nopasswd_files: []

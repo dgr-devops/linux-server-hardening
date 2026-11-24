@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+# El primer valor de cada directiva gana en sshd: este fichero se carga antes
+# (Include al principio de sshd_config) y por eso prevalece.
+PermitRootLogin {{ ssh_permit_root_login }}
+PasswordAuthentication {{ ssh_password_authentication }}
+PermitEmptyPasswords no
+KbdInteractiveAuthentication no
+HostbasedAuthentication no
+MaxAuthTries {{ ssh_max_auth_tries }}
+LoginGraceTime {{ ssh_login_grace_time }}
+ClientAliveInterval {{ ssh_client_alive_interval }}
+ClientAliveCountMax {{ ssh_client_alive_count_max }}
+X11Forwarding {{ ssh_x11_forwarding }}
+AllowAgentForwarding {{ ssh_allow_agent_forwarding }}
+AllowTcpForwarding {{ ssh_allow_tcp_forwarding }}
+LogLevel VERBOSE
+Ciphers {{ ssh_ciphers | join(',') }}
+KexAlgorithms {{ ssh_kex_algorithms | join(',') }}
+MACs {{ ssh_macs | join(',') }}
+{% if ssh_allow_users | length > 0 %}
+AllowUsers {{ ssh_allow_users | join(' ') }}
+{% endif %}
