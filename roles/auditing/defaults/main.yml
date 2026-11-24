@@ -1,0 +1,16 @@
+---
+# Reglas -w (vigilancia de ficheros) con su clave de búsqueda en ausearch -k.
+auditing_watches:
+  - {path: /etc/passwd, perms: wa, key: identity}
+  - {path: /etc/shadow, perms: wa, key: identity}
+  - {path: /etc/group, perms: wa, key: identity}
+  - {path: /etc/gshadow, perms: wa, key: identity}
+  - {path: /etc/sudoers, perms: wa, key: sudoers}
+  - {path: /etc/sudoers.d, perms: wa, key: sudoers}
+  - {path: /etc/ssh/sshd_config, perms: wa, key: sshd}
+  - {path: /etc/ssh/sshd_config.d, perms: wa, key: sshd}
+  - {path: /etc/login.defs, perms: wa, key: logindefs}
+  - {path: /var/log/sudo.log, perms: wa, key: sudolog}
+# Hacer las reglas inmutables hasta el próximo reinicio (-e 2). Desactivado
+# porque impide ajustar reglas sin reiniciar.
+auditing_immutable: false

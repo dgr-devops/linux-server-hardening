@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  role_name: auditing
+  author: Daniel García Rodríguez
+  description: Reglas de auditoría con auditd
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+    - name: Ubuntu
+      versions:
+        - noble
+  galaxy_tags:
+    - hardening
+    - security
+dependencies: []

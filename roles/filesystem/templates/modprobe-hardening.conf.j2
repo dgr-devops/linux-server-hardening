@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+{% for module in filesystem_blocked_modules %}
+install {{ module }} /bin/true
+{% endfor %}

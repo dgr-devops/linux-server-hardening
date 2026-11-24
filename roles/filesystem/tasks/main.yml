@@ -1,0 +1,56 @@
+---
+- name: Fijar permisos de ficheros críticos
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  loop: "{{ filesystem_permissions }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Buscar ficheros de /etc escribibles por todos
+  ansible.builtin.find:
+    paths: /etc
+    file_type: file
+    recurse: true
+    hidden: true
+  register: filesystem_etc_files
+  when: filesystem_fix_world_writable | bool
+
+- name: Quitar el permiso de escritura a otros en esos ficheros
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: o-w
+  loop: "{{ filesystem_etc_files.files | selectattr('woth') | list }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when: filesystem_fix_world_writable | bool
+
+- name: Crear los directorios de configuración adicionales
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - /etc/security/limits.d
+    - /etc/modprobe.d
+
+- name: Desactivar los core dumps en limits
+  ansible.builtin.template:
+    src: limits-hardening.conf.j2
+    dest: /etc/security/limits.d/10-hardening.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: filesystem_disable_core_dumps | bool
+
+- name: Bloquear módulos de sistemas de ficheros no usados
+  ansible.builtin.template:
+    src: modprobe-hardening.conf.j2
+    dest: /etc/modprobe.d/hardening-filesystems.conf
+    owner: root
+    group: root
+    mode: "0644"

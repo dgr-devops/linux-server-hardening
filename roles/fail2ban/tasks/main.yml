@@ -1,0 +1,22 @@
+---
+- name: Instalar fail2ban
+  ansible.builtin.apt:
+    name: fail2ban
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Desplegar la configuración de la jail sshd
+  ansible.builtin.template:
+    src: hardening.local.j2
+    dest: /etc/fail2ban/jail.d/hardening.local
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reiniciar fail2ban
+
+- name: Habilitar fail2ban al arranque
+  ansible.builtin.service:
+    name: fail2ban
+    enabled: true
+  when: hardening_manage_services | default(true) | bool

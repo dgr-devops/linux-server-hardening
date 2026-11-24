@@ -1,0 +1,5 @@
+---
+- name: Cargar reglas de auditd
+  ansible.builtin.command: augenrules --load
+  changed_when: true
+  when: hardening_apply_runtime | default(true) | bool

@@ -1,0 +1,17 @@
+---
+filesystem_permissions:
+  - {path: /etc/passwd, mode: "0644", owner: root, group: root}
+  - {path: /etc/group, mode: "0644", owner: root, group: root}
+  - {path: /etc/shadow, mode: "0640", owner: root, group: shadow}
+  - {path: /etc/gshadow, mode: "0640", owner: root, group: shadow}
+  - {path: /etc/crontab, mode: "0600", owner: root, group: root}
+filesystem_blocked_modules:
+  - cramfs
+  - freevxfs
+  - hfs
+  - hfsplus
+  - jffs2
+  - udf
+filesystem_disable_core_dumps: true
+# Quitar el permiso de escritura "otros" a los ficheros de /etc.
+filesystem_fix_world_writable: true

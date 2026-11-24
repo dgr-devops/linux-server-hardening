@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+-D
+-b 8192
+{% for watch in auditing_watches %}
+-w {{ watch.path }} -p {{ watch.perms }} -k {{ watch.key }}
+{% endfor %}
+-a always,exit -F arch=b64 -S init_module,finit_module,delete_module -k modules
+{% if auditing_immutable | bool %}
+-e 2
+{% endif %}
