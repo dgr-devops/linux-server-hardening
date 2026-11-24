@@ -92,6 +92,17 @@ El script construye un contenedor mal configurado, comprueba que el rol `ssh` ab
 aplica el playbook, lo repite y exige `changed=0` (idempotencia) y `FAIL=0` en la auditoría final.
 Lint: `yamllint .`, `ansible-lint` (perfil `production`) y `shellcheck`. CI en `.github/workflows/ci.yml`.
 
+## Qué está verificado
+
+Ejecutado de verdad (máquina local y GitHub Actions, workflow `CI`, 4 jobs en verde):
+
+- `yamllint .` y `ansible-lint` (perfil `production`): 0 fallos. `shellcheck` y `actionlint` (este último con
+  su imagen Docker): limpios.
+- `ansible-playbook --syntax-check` de `site.yml` y `audit.yml`.
+- `tests/container/run.sh` en **Ubuntu 24.04** y **Debian 12**: el rol `ssh` aborta sin claves, primera pasada
+  sin errores (ANTES 19 % → DESPUÉS 100 %, `FAIL 41 → 0` en Ubuntu), segunda pasada con `changed=0` y
+  auditoría final con `FAIL=0`.
+
 ## Qué NO está verificado
 
 - **Sin systemd:** en el contenedor no se arrancan ni habilitan servicios, no se recarga sshd ni se aplica
